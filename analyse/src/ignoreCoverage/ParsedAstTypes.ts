@@ -15,7 +15,11 @@ export class AstElementTypeContext {
   public hasTypeVariable: boolean;
   public position: AstPosition | undefined;
 
-  public constructor(key, name, type) {
+  public constructor(
+    key: string,
+    name: string,
+    type: string | null | undefined
+  ) {
     this.key = key;
     this.name = name;
     this.type = type;
@@ -27,7 +31,13 @@ export class VariableTypeContext extends AstElementTypeContext {
   public modifiers: string[] | undefined;
   public ignore: boolean;
 
-  public constructor(key, name, type, modifiers, ignore) {
+  public constructor(
+    key: string,
+    name: string,
+    type: string | null | undefined,
+    modifiers: string[] | undefined,
+    ignore: boolean
+  ) {
     super(key, name, type);
     this.modifiers = modifiers;
     this.ignore = ignore;
@@ -51,11 +61,12 @@ export class VariableTypeContext extends AstElementTypeContext {
     // signatures (same name, same data type, same access
     // modifier), but also data fields with similar signatures (similar
     // name, same data type, same access modifier)
-    let sameType =
-      (!!this.type &&
-        !!otherParameter.type &&
-        this.type === otherParameter.type) ||
-      (!this.type && !otherParameter.type);
+    //
+    // let sameType =
+    //   (!!this.type &&
+    //     !!otherParameter.type &&
+    //     this.type === otherParameter.type) ||
+    //   (!this.type && !otherParameter.type);
 
     similarityModifierOfVariablesWithUnknownType =
       similarityModifierOfVariablesWithUnknownType > 0
@@ -120,7 +131,7 @@ export class VariableTypeContext extends AstElementTypeContext {
   }
 
   public haveSameModifiers(otherParameter: VariableTypeContext) {
-    let sameModifiers = true;
+    let sameModifiers: boolean;
     let bothHaveModifiers =
       this.modifiers !== undefined && otherParameter.modifiers !== undefined;
     if (bothHaveModifiers) {
@@ -139,11 +150,7 @@ export class VariableTypeContext extends AstElementTypeContext {
     } else {
       let bothHaveNoModifiers =
         this.modifiers === undefined && otherParameter.modifiers === undefined;
-      if (bothHaveNoModifiers) {
-        sameModifiers = true;
-      } else {
-        sameModifiers = false;
-      }
+      sameModifiers = bothHaveNoModifiers;
     }
     return sameModifiers;
   }
@@ -236,7 +243,12 @@ export class ClassOrInterfaceTypeContext extends AstElementTypeContext {
     return instance;
   }
 
-  public constructor(key, name, type, file_path) {
+  public constructor(
+    key: string,
+    name: string,
+    type: string | null | undefined,
+    file_path: string
+  ) {
     super(key, name, type);
     this.file_path = file_path;
     this.name = name;
@@ -267,10 +279,7 @@ export class ClassOrInterfaceTypeContext extends AstElementTypeContext {
         this,
         softwareProjectDicts
       );
-    if (isParentClassOf) {
-      return true;
-    }
-    return false;
+    return isParentClassOf;
   }
 
   public isSubClassOrInterfaceOfOtherClassOrInterface(
@@ -410,11 +419,11 @@ export class MemberFieldParameterTypeContext extends VariableTypeContext {
   public classOrInterfaceKey: string;
 
   public constructor(
-    key,
-    name,
-    type,
-    modifiers,
-    ignore,
+    key: string | undefined,
+    name: string,
+    type: string | null | undefined,
+    modifiers: any[] | undefined,
+    ignore: boolean,
     classOrInterface: ClassOrInterfaceTypeContext
   ) {
     super(
@@ -447,11 +456,11 @@ export class MethodParameterTypeContext extends VariableTypeContext {
   }
 
   public constructor(
-    key,
-    name,
-    type,
-    modifiers,
-    ignore,
+    key: string | undefined,
+    name: string,
+    type: string | null | undefined,
+    modifiers: any[] | undefined,
+    ignore: boolean,
     method: MethodTypeContext
   ) {
     super(method?.key + '/parameter/' + key, name, type, modifiers, ignore);
@@ -479,9 +488,9 @@ export class MethodTypeContext extends AstElementTypeContext {
   }
 
   public constructor(
-    key,
-    name,
-    type,
+    key: string | undefined,
+    name: string,
+    type: string | null | undefined,
     overrideAnnotation: boolean,
     classOrInterface: ClassOrInterfaceTypeContext
   ) {
@@ -525,9 +534,9 @@ export class MethodTypeContext extends AstElementTypeContext {
     softwareProjectDicts: SoftwareProjectDicts
   ) {
     let currentClassOrInterfaceKey = method.classOrInterfaceKey;
-    let currentClassOrInterface =
-      softwareProjectDicts.dictClassOrInterface[currentClassOrInterfaceKey];
-    return currentClassOrInterface;
+    return softwareProjectDicts.dictClassOrInterface[
+      currentClassOrInterfaceKey
+    ];
   }
 
   public static isWholeHierarchyKnown(

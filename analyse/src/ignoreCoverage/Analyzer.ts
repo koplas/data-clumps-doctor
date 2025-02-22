@@ -1,7 +1,7 @@
 import {GitHelper} from './GitHelper';
 import fs from 'fs';
 import {SoftwareProjectDicts} from './SoftwareProject';
-import {Detector} from './detector/Detector';
+import {Detector, DetectorOptions} from './detector/Detector';
 import {ParserHelperJavaSourceCode} from './ParserHelperJavaSourceCode';
 import {Timer} from './Timer';
 import path from 'path';
@@ -144,7 +144,7 @@ export class Analyzer {
     commits_to_analyse: any[];
   }> {
     let git_checkout_needed = true;
-    let commits_to_analyse: any[] = [];
+    let commits_to_analyse: any[];
     if (
       this.commit_selection_mode === 'current' ||
       !this.commit_selection_mode
@@ -262,7 +262,7 @@ export class Analyzer {
   }
 
   static replaceOutputVariables(
-    path_to_output_with_variables,
+    path_to_output_with_variables: string,
     project_name = 'project_name',
     project_commit = 'project_commit'
   ) {
@@ -278,7 +278,7 @@ export class Analyzer {
     return copy;
   }
 
-  async doesAnalysisExist(commit) {
+  async doesAnalysisExist(commit: string | undefined) {
     let path_to_result = Analyzer.replaceOutputVariables(
       this.path_to_output_with_variables,
       this.project_name,
@@ -298,7 +298,7 @@ export class Analyzer {
     return false;
   }
 
-  async analyse(commit) {
+  async analyse(commit: string) {
     console.log('Analyse commit: ' + commit);
 
     let project_version =
@@ -399,16 +399,16 @@ export class Analyzer {
   }
 
   static async analyseSoftwareProjectDicts(
-    softwareProjectDicts,
-    project_url,
-    project_name,
-    project_version,
-    commit,
-    commit_tag,
-    commit_date,
-    path_to_result,
-    progressCallback,
-    detectorOptions
+    softwareProjectDicts: SoftwareProjectDicts,
+    project_url: string | null,
+    project_name: string | null,
+    project_version: string | null,
+    commit: string,
+    commit_tag: string | null,
+    commit_date: string | null,
+    path_to_result: string,
+    progressCallback: null,
+    detectorOptions: Partial<DetectorOptions> | null
   ) {
     let detector = new Detector(
       softwareProjectDicts,

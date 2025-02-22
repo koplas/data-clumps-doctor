@@ -66,10 +66,12 @@ function time_stamp_to_file_paths(report_folder) {
     let time_per_file = time_diff / (i + 1);
     let time_left = time_per_file * (all_report_files_paths.length - (i + 1));
     let time_running = time_diff;
-    let time_left_hh_mm_ss = new Date(time_left).toISOString().substr(11, 8);
+    let time_left_hh_mm_ss = new Date(time_left)
+      .toISOString()
+      .slice(11, 8 + 11);
     let time_running_hh_mm_ss = new Date(time_running)
       .toISOString()
-      .substr(11, 8);
+      .slice(11, 8 + 11);
     let file_name_with_extension = path.basename(report_file_path);
     console.log(
       'parsing ' +
@@ -101,12 +103,15 @@ function time_stamp_to_file_paths(report_folder) {
   return timestamp_to_file_path;
 }
 
-function getSortedTimestamps(timestamp_to_file_path) {
+function getSortedTimestamps(timestamp_to_file_path: {}) {
   let sorted_timestamps = Object.keys(timestamp_to_file_path);
   return sorted_timestamps;
 }
 
-function getAllDataClumpsKeys(sorted_timestamps, timestamp_to_file_paths) {
+function getAllDataClumpsKeys(
+  sorted_timestamps: string | any[],
+  timestamp_to_file_paths: {[x: string]: any}
+) {
   let all_data_clump_keys = {};
 
   for (let i = 0; i < sorted_timestamps.length; i++) {
@@ -190,7 +195,7 @@ function countDataClumpsGroups(data_clumps_dict) {
   let visited = {};
   let groupSizes: any = [];
 
-  function dfs(node): number {
+  function dfs(node: string): number {
     visited[node] = true;
     let neighbors = graph[node];
     let groupSize = 1; // Start with 1 to count the current node
@@ -233,7 +238,7 @@ function countDataClumpsGroups(data_clumps_dict) {
   };
 }
 
-function project_commit_dateToDate(project_commit_date) {
+function project_commit_dateToDate(project_commit_date: number) {
   try {
     let date = new Date(project_commit_date * 1000);
     // date to string

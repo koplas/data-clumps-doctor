@@ -1,7 +1,9 @@
 import {exec} from 'child_process';
 
 export class ParserHelperJavaSourceCode {
-  static async execAsync(command): Promise<{stdout: string; stderr: string}> {
+  static async execAsync(
+    command: string
+  ): Promise<{stdout: string; stderr: string}> {
     return new Promise((resolve, reject) => {
       exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -16,7 +18,7 @@ export class ParserHelperJavaSourceCode {
   static async parseSourceCodeToAst(
     path_to_source_code: string,
     path_to_save_parsed_ast: string,
-    path_to_ast_generator_folder
+    path_to_ast_generator_folder: string
   ): Promise<void> {
     //console.log("Started generating ASTs");
     try {

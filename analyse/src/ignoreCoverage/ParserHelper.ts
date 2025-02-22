@@ -4,11 +4,9 @@ import fs from 'fs';
 import path from 'path';
 import {ClassOrInterfaceTypeContext} from './ParsedAstTypes';
 
-import {exec, spawn} from 'child_process';
-
 export class ParserHelper {
   static async getSoftwareProjectDictsFromParsedAstFolder(
-    path_to_folder_of_parsed_ast
+    path_to_folder_of_parsed_ast: string
   ) {
     let softwareProjectDicts: SoftwareProjectDicts = new SoftwareProjectDicts();
     //console.log("Started loading ASTs")
@@ -20,7 +18,6 @@ export class ParserHelper {
     for (let fileOrFolder of filesAndFoldersInPath) {
       let fullPath = path.join(path_to_folder_of_parsed_ast, fileOrFolder.name);
       if (fileOrFolder.isDirectory()) {
-        continue;
       } else {
         let fileContent = fs.readFileSync(fullPath, 'utf-8');
         const loadedJsonData: any = JSON.parse(fileContent); // Parse the JSON data

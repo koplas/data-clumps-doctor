@@ -3,7 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import {Command} from 'commander';
+import {Command, OptionValues} from 'commander';
 import {Analyzer} from './Analyzer';
 import {GitHelper} from './GitHelper';
 import * as os from 'os';
@@ -130,6 +130,7 @@ program
     '--commit_selection <mode>',
     'Commit selections (default: current, options: history, tags, "commit_hash1,commit_hash2,...")'
   );
+
 // TODO: --detector_options <path_to_detector_options_json>
 
 function printLogo() {
@@ -165,7 +166,7 @@ function printLogo() {
   );
 }
 
-async function analyse(path_to_project, options) {
+async function analyse(path_to_project: string, options: OptionValues) {
   const source_type = options.source_type;
   const path_to_ast_generator_folder = options.path_to_ast_generator_folder;
 
@@ -287,7 +288,7 @@ async function main() {
     //console.log("Clearing temp folder "+path_to_project);
     if (fs.existsSync(path_to_project)) {
       // delete folder if exists
-      fs.rmdirSync(path_to_project, {recursive: true});
+      fs.rmSync(path_to_project, {recursive: true});
     }
     // create temp folder recursively
     fs.mkdirSync(path_to_project, {recursive: true});
@@ -304,7 +305,7 @@ async function main() {
     //console.log("Deleting clones project folder "+path_to_project);
     if (fs.existsSync(path_to_project)) {
       // delete folder if exists
-      fs.rmdirSync(path_to_project, {recursive: true});
+      fs.rmSync(path_to_project, {recursive: true});
     }
   }
 }

@@ -6,7 +6,7 @@ import simpleGit, {
 } from 'simple-git';
 
 export class GitHelper {
-  static async checkoutGitCommit(path_to_project, commit) {
+  static async checkoutGitCommit(path_to_project: string, commit: string) {
     //console.log("Start checkoutGitCommit "+commit);
     const git: SimpleGit = simpleGit(path_to_project);
     try {
@@ -17,7 +17,10 @@ export class GitHelper {
     }
   }
 
-  static async cloneGitProject(git_project_url, path_to_project) {
+  static async cloneGitProject(
+    git_project_url: string,
+    path_to_project: string
+  ) {
     console.log('Start cloneGitProject ' + git_project_url);
     const git: SimpleGit = simpleGit({
       progress({method, stage, progress}) {
@@ -38,7 +41,7 @@ export class GitHelper {
     }
   }
 
-  static async getRemoteUrl(path_to_project): Promise<string | null> {
+  static async getRemoteUrl(path_to_project: string): Promise<string | null> {
     //console.log("Start getRemoteUrl");
     //console.log("path_to_project: "+path_to_project)
     const git: SimpleGit = simpleGit(path_to_project);
@@ -180,28 +183,31 @@ export class GitHelper {
   ): Promise<string[] | null> {
     return new Promise((resolve, reject) => {
       const git: SimpleGit = simpleGit(path_to_folder);
-      git.log({from: start, to: end}, (err: Error | null, log: LogResult<string>) => {
-        if (err) {
-          resolve(null);
-        } else {
-          git.log(
-            {from: start, to: end},
-            (err: Error | null, log: LogResult<DefaultLogFields>) => {
-              if (err) {
-                resolve(null);
-              } else {
-                const commits: string[] = [];
-                log.all.forEach(entry => {
-                  if (entry.hash) {
-                    commits.push(entry.hash);
-                  }
-                });
-                resolve(commits);
+      git.log(
+        {from: start, to: end},
+        (err: Error | null, log: LogResult<string>) => {
+          if (err) {
+            resolve(null);
+          } else {
+            git.log(
+              {from: start, to: end},
+              (err: Error | null, log: LogResult<DefaultLogFields>) => {
+                if (err) {
+                  resolve(null);
+                } else {
+                  const commits: string[] = [];
+                  log.all.forEach(entry => {
+                    if (entry.hash) {
+                      commits.push(entry.hash);
+                    }
+                  });
+                  resolve(commits);
+                }
               }
-            }
-          );
+            );
+          }
         }
-      });
+      );
     });
   }
 

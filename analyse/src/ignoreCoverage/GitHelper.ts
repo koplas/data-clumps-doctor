@@ -172,6 +172,39 @@ export class GitHelper {
     });
   }
 
+  // function to get commit range
+  static async getCommitRange(
+    path_to_folder: string,
+    start: string,
+    end: string
+  ): Promise<string[] | null> {
+    return new Promise((resolve, reject) => {
+      const git: SimpleGit = simpleGit(path_to_folder);
+      git.log({from: start, to: end}, (err: Error | null, log: LogResult<string>) => {
+        if (err) {
+          resolve(null);
+        } else {
+          git.log(
+            {from: start, to: end},
+            (err: Error | null, log: LogResult<DefaultLogFields>) => {
+              if (err) {
+                resolve(null);
+              } else {
+                const commits: string[] = [];
+                log.all.forEach(entry => {
+                  if (entry.hash) {
+                    commits.push(entry.hash);
+                  }
+                });
+                resolve(commits);
+              }
+            }
+          );
+        }
+      });
+    });
+  }
+
   // New function to get all commits
   static async getAllCommitsFromGitProject(
     path_to_folder: string

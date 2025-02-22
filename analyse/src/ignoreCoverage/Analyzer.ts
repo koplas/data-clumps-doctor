@@ -72,6 +72,26 @@ export class Analyzer {
     return commits_to_analyse;
   }
 
+  async getCommitRange(start: string, end: string) {
+    const rangeCommits = await GitHelper.getCommitRange(
+      this.path_to_project,
+      start,
+      end
+    );
+    let missing_commit_results: string[] = [];
+
+    if (!!rangeCommits) {
+      //console.log("amount commits: "+allCommits.length)
+
+      for (const commit of rangeCommits) {
+        missing_commit_results.push(commit);
+      }
+    } else {
+      console.log('No commits found');
+    }
+    return missing_commit_results;
+  }
+
   async getAllGitCommits() {
     //console.log("Perform a full check of the whole project");
     const allCommits = await GitHelper.getAllCommitsFromGitProject(
@@ -135,6 +155,10 @@ export class Analyzer {
       commits_to_analyse = await this.getAllGitCommits();
     } else if (this.commit_selection_mode === 'tags') {
       commits_to_analyse = await this.getGitTagCommitsHashes();
+    } else if (this.commit_selection_mode.startsWith('range=')) {
+      const [, values] = this.commit_selection_mode.split('=');
+      const [start, end] = values.split(',');
+      commits_to_analyse = await this.getCommitRange(start, end);
     } else {
       let string_commits_to_analyse = this.commit_selection_mode;
       commits_to_analyse = string_commits_to_analyse.split(',');

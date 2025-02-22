@@ -19,7 +19,8 @@
     "clean": "rimraf ./build && gts clean",
     "lint": "gts lint",
     "fix": "gts fix",
-    "setup": "npm install && node setup.js && rimraf setup.js setup.json"
+    "setup": "npm install && node setup.js && rimraf setup.js setup.json",
+    "prettier": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'"
   },
   "bin": {
     "data-clumps": "./build/ignoreCoverage/cli.js"
@@ -54,6 +55,7 @@
     "gts": "^3.1.0",
     "jest": "^27.0.6",
     "nodemon": "^2.0.9",
+    "prettier": "^3.5.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.3",
     "ts-node": "^10.9.1",
@@ -62,8 +64,8 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.21.0",
     "@stdlib/buffer-from-string": "^0.0.8",
-    "Base64": "^1.1.0",
     "axios": "^0.21.4",
+    "Base64": "^1.1.0",
     "base64-js": "^1.5.1",
     "buffer": "^6.0.0",
     "buffer-from": "^1.1.2",

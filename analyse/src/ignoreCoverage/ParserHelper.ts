@@ -30,13 +30,25 @@ export class ParserHelper {
     return softwareProjectDicts;
   }
 
+  static #retry(maxRetries: number, fn: any) {
+    try {
+      fn();
+    } catch (e) {
+      if (maxRetries <= 0) {
+        throw e;
+      }
+      return ParserHelper.#retry(maxRetries - 1, fn);
+    }
+  }
   static async removeGeneratedAst(
     path_to_folder_of_parsed_ast: string
   ): Promise<void> {
     //console.log("Started removing generated ASTs");
     // delete file if exists
     if (fs.existsSync(path_to_folder_of_parsed_ast)) {
-      fs.rmSync(path_to_folder_of_parsed_ast, {recursive: true});
+      this.#retry(10, () =>
+        fs.rmSync(path_to_folder_of_parsed_ast, {recursive: true})
+      );
     }
   }
 }
